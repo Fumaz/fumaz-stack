@@ -1,0 +1,48 @@
+{
+  "name": "English",
+  "alert": {
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning"
+  },
+  "requiredField": "This field is required",
+  "registration": {
+    "title": "Sign up today!",
+    "subtitle": "Create an account",
+    "withEmail": "or sign up with your email",
+    "results": {
+      "emailAlreadyExists": "Email already exists",
+      "successful": "Registration successful"
+    },
+    "fields": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "password": "Password",
+      "language": "Language"
+    },
+    "buttons": {
+      "register": "Register"
+    },
+    "links": {
+      "alreadyHaveAccount": "Already have an account?",
+      "login": "Login here!"
+    }
+  },
+  "login": {
+    "results": {
+      "invalidCredentials": "Invalid credentials, please try again"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password"
+    },
+    "buttons": {
+      "login": "Login"
+    }
+  },
+  "notifications": {
+    "success": "Success",
+    "error": "Error"
+  }
+}
