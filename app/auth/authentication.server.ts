@@ -93,7 +93,7 @@ export async function authenticate(request: Request): Promise<never> {
     const cookieSession = await getSession(request.headers.get('Cookie'));
     cookieSession.set('accessToken', session.accessToken);
 
-    throw redirect(redirectUrl ?? '/chat', {
+    throw redirect(redirectUrl ?? '/app', {
         headers: {
             'Set-Cookie': await commitSession(cookieSession),
         },

@@ -98,7 +98,7 @@ export function useCustomFetcher<Return extends Record<string, any>, Submit exte
         }
 
         setSubmittedData(null);
-    }, [fetcher.state, callbacksRef.current]);
+    }, [fetcher.state, callbacksRef.current, submitting]);
 
     const submit = useCallback(async (data: Submit, options?: HookOptions<Return>): Promise<SerializeFrom<Return>> => {
         if (fetcher.state !== 'idle') {
