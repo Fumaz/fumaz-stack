@@ -1,14 +1,25 @@
-import {useForm} from "@mantine/form";
-import {RegisterActionData, registerActionRoute, RegisterSchema} from "~/routes/api/authentication/register/route";
-import {useCustomFetcher} from "~/utils/fetcher";
-import {Anchor, Button, Divider, PasswordInput, Select, SimpleGrid, Stack, Text, TextInput, Title} from "@mantine/core";
-import {AlertSuccess} from "~/components/AlertSuccess";
-import {AlertError} from "~/components/AlertError";
-import {useTranslation} from "react-i18next";
-import {IconBrandFacebookFilled, IconBrandGoogleFilled} from "@tabler/icons-react";
+import { useForm } from '@mantine/form';
+import { RegisterActionData, registerActionRoute, RegisterSchema } from '~/routes/api/authentication/register/route';
+import { useCustomFetcher } from '~/utils/fetcher';
+import {
+    Anchor,
+    Button,
+    Divider,
+    PasswordInput,
+    Select,
+    SimpleGrid,
+    Stack,
+    Text,
+    TextInput,
+    Title,
+} from '@mantine/core';
+import { AlertSuccess } from '~/components/AlertSuccess';
+import { AlertError } from '~/components/AlertError';
+import { useTranslation } from 'react-i18next';
+import { IconBrandFacebookFilled, IconBrandGoogleFilled } from '@tabler/icons-react';
 
 export default function Route() {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const form = useForm({
         initialValues: {
             email: '',
@@ -43,10 +54,10 @@ export default function Route() {
                     return t('requiredField');
                 }
             },
-        }
+        },
     });
     const fetcher = useCustomFetcher<RegisterActionData, RegisterSchema>({
-        action: registerActionRoute()
+        action: registerActionRoute(),
     });
 
     function submit() {
@@ -63,11 +74,11 @@ export default function Route() {
 
                 <SimpleGrid cols={2}>
                     <Button fullWidth color={'blue'}
-                            leftSection={<IconBrandFacebookFilled stroke={0.01}/>}>Facebook</Button>
-                    <Button fullWidth color={'red'} leftSection={<IconBrandGoogleFilled stroke={0.1}/>}>Google</Button>
+                            leftSection={<IconBrandFacebookFilled stroke={0.01} />}>Facebook</Button>
+                    <Button fullWidth color={'red'} leftSection={<IconBrandGoogleFilled stroke={0.1} />}>Google</Button>
                 </SimpleGrid>
 
-                <Divider orientation={'horizontal'} label={t('registration.withEmail')}/>
+                <Divider orientation={'horizontal'} label={t('registration.withEmail')} />
 
                 <SimpleGrid cols={2}>
                     <TextInput label={t('registration.fields.firstName')} {...form.getInputProps('firstName')} />
@@ -80,16 +91,16 @@ export default function Route() {
                 <Select label={t('registration.fields.language')} {...form.getInputProps('language')} data={[
                     {
                         label: 'English',
-                        value: 'en'
+                        value: 'en',
                     },
                     {
                         label: 'Italiano',
-                        value: 'it'
-                    }
-                ]}/>
+                        value: 'it',
+                    },
+                ]} />
 
-                <AlertError description={fetcher.error}/>
-                <AlertSuccess description={fetcher.data?.message}/>
+                <AlertError description={fetcher.error} />
+                <AlertSuccess description={fetcher.data?.message} />
 
                 <Button type={'submit'} loading={fetcher.loading}>{t('registration.buttons.register')}</Button>
 

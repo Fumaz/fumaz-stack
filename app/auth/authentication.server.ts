@@ -1,11 +1,11 @@
-import {database} from '~/database/database';
-import {json, redirect} from '@remix-run/node';
-import {User} from '@prisma/client';
-import {commitSession, getSession} from '~/auth/session.server';
-import {nanoid} from 'nanoid/non-secure';
+import { database } from '~/database/database';
+import { json, redirect } from '@remix-run/node';
+import { User } from '@prisma/client';
+import { commitSession, getSession } from '~/auth/session.server';
+import { nanoid } from 'nanoid/non-secure';
 
 export async function isAuthenticated(request: Request): Promise<Omit<User, 'password'>> {
-    const {headers} = request;
+    const { headers } = request;
     const cookieHeader = headers.get('Cookie');
     const session = await getSession(cookieHeader);
     const url = new URL(request.url);

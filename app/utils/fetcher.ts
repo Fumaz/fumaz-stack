@@ -14,6 +14,7 @@ interface HookOptions<Return extends Record<string, any>> {
     defaultFailureMessage?: string;
     onSuccess?: (data: SerializeFrom<Return>) => void | Promise<void>;
     onFailure?: (error: string) => void | Promise<void>;
+    allowResubmit?: boolean;
 }
 
 interface HookReturn<Return extends Record<string, any>, Submit extends Record<string, any> = Record<string, any>> {
@@ -26,34 +27,43 @@ interface HookReturn<Return extends Record<string, any>, Submit extends Record<s
 }
 
 export function useCustomFetcher<Return extends Record<string, any>, Submit extends Record<string, any> = Record<string, any>>({
-                                                                                                                                               encType,
-                                                                                                                                               method,
-                                                                                                                                               preventScrollReset,
-                                                                                                                                               action,
-                                                                                                                                               sendNotification,
-                                                                                                                                               defaultSuccessMessage,
-                                                                                                                                               defaultFailureMessage,
-                                                                                                                                               onSuccess,
-                                                                                                                                               onFailure,
-                                                                                                                                           }: HookOptions<Return> = {
+                                                                                                                                   encType,
+                                                                                                                                   method,
+                                                                                                                                   preventScrollReset,
+                                                                                                                                   action,
+                                                                                                                                   sendNotification,
+                                                                                                                                   defaultSuccessMessage,
+                                                                                                                                   defaultFailureMessage,
+                                                                                                                                   onSuccess,
+                                                                                                                                   onFailure,
+                                                                                                                                   allowResubmit = false,
+                                                                                                                               }: HookOptions<Return> = {
     encType: 'application/json',
     method: 'post',
     preventScrollReset: true,
     sendNotification: true,
     defaultSuccessMessage: 'Operazione completata con successo',
     defaultFailureMessage: 'Si è verificato un errore',
+    allowResubmit: false,
 }): HookReturn<Return, Submit> {
-    const {showSuccessNotification, showFailureNotification} = useNotifications();
+    const {
+        showSuccessNotification,
+        showFailureNotification,
+    } = useNotifications();
     const fetcher = useFetcher<Return>();
     const [submittedData, setSubmittedData] = useState<Submit | null>(null);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const callbacksRef = useRef<{
         resolve: (value: SerializeFrom<Return>) => void | Promise<void>,
         reject: (reason?: string) => void | Promise<void>
-    }>();
+    } | null>(null);
 
     useEffect(() => {
         if (fetcher.state !== 'idle') {
+            return;
+        }
+
+        if (!callbacksRef.current) {
             return;
         }
 
@@ -83,7 +93,6 @@ export function useCustomFetcher<Return extends Record<string, any>, Submit exte
                 callbacksRef.current.reject(error);
             }
 
-            setSubmittedData(null);
             return;
         }
 
@@ -96,12 +105,10 @@ export function useCustomFetcher<Return extends Record<string, any>, Submit exte
         if (callbacksRef.current) {
             callbacksRef.current.resolve(data);
         }
-
-        setSubmittedData(null);
-    }, [fetcher.state, callbacksRef.current, submitting]);
+    }, [fetcher.state]);
 
     const submit = useCallback(async (data: Submit, options?: HookOptions<Return>): Promise<SerializeFrom<Return>> => {
-        if (fetcher.state !== 'idle') {
+        if (fetcher.state !== 'idle' && !options?.allowResubmit && !allowResubmit) {
             throw new Error('Cannot submit while fetching');
         }
 
@@ -159,7 +166,10 @@ export function useFetcherState<T extends ActionData>({
     defaultFailureMessage?: string,
 }) {
     const [lastSnowflake, setLastSnowflake] = useState<string | null>(null);
-    const {showSuccessNotification, showFailureNotification} = useNotifications();
+    const {
+        showSuccessNotification,
+        showFailureNotification,
+    } = useNotifications();
 
     useEffect(() => {
         if (fetcher.data?.action != action || fetcher.data?.snowflake === lastSnowflake) {
