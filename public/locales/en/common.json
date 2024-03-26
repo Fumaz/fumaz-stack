@@ -30,8 +30,8 @@
     }
   },
   "login": {
-    "title": "Sign up today!",
-    "subtitle": "Create an account",
+    "title": "Sign in today!",
+    "subtitle": "Log in to your account",
     "withEmail": "or sign in with your email",
     "results": {
       "invalidCredentials": "Invalid credentials, please try again"
