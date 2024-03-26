@@ -59,7 +59,7 @@ export default function Route() {
 
                 <Text size={'sm'} ta={'center'}>
                     {t('login.links.dontHaveAccount')}{' '}
-                    <Anchor href={'/login'}>{t('login.links.register')}</Anchor>
+                    <Anchor href={'/register'}>{t('login.links.register')}</Anchor>
                 </Text>
             </Stack>
         </form>
