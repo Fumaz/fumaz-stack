@@ -10,7 +10,7 @@ import '@mantine/nprogress/styles.css';
 import '@mantine/charts/styles.css';
 
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react';
-import { MantineProvider, MantineThemeOverride } from '@mantine/core';
+import { ColorSchemeScript, MantineProvider, MantineThemeOverride } from '@mantine/core';
 import { json, LoaderFunctionArgs } from '@remix-run/node';
 import i18next from '~/i18next.server';
 import { useTranslation } from 'react-i18next';
@@ -52,12 +52,13 @@ export default function App() {
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <Meta />
             <Links />
+            <ColorSchemeScript forceColorScheme={'light'} />
         </head>
         <body style={{
             height: '100%',
             width: '100%',
         }}>
-        <MantineProvider theme={THEME}>
+        <MantineProvider theme={THEME} forceColorScheme={'light'}>
             <Outlet />
             <ScrollRestoration />
             <Scripts />
