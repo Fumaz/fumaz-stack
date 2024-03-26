@@ -1,7 +1,7 @@
 import { useForm } from '@mantine/form';
 import { LoginActionData, loginActionRoute, LoginSchema } from '~/routes/api/authentication/login/route';
 import { useCustomFetcher } from '~/utils/fetcher';
-import { Button, Divider, PasswordInput, SimpleGrid, Stack, Text, TextInput, Title } from '@mantine/core';
+import { Anchor, Button, Divider, PasswordInput, SimpleGrid, Stack, Text, TextInput, Title } from '@mantine/core';
 import { AlertError } from '~/components/AlertError';
 import { useTranslation } from 'react-i18next';
 import { IconBrandFacebookFilled, IconBrandGoogleFilled } from '@tabler/icons-react';
@@ -38,8 +38,8 @@ export default function Route() {
         <form onSubmit={form.onSubmit(submit)}>
             <Stack>
                 <Stack gap={0}>
-                    <Title order={1}>{t('registration.title')}</Title>
-                    <Text size={'sm'} c={'dimmed'}>{t('registration.subtitle')}</Text>
+                    <Title order={1}>{t('login.title')}</Title>
+                    <Text size={'sm'} c={'dimmed'}>{t('login.subtitle')}</Text>
                 </Stack>
 
                 <SimpleGrid cols={2}>
@@ -48,7 +48,7 @@ export default function Route() {
                     <Button fullWidth color={'red'} leftSection={<IconBrandGoogleFilled stroke={0.1} />}>Google</Button>
                 </SimpleGrid>
 
-                <Divider orientation={'horizontal'} label={t('registration.withEmail')} />
+                <Divider orientation={'horizontal'} label={t('login.withEmail')} />
 
                 <TextInput label={t('login.fields.email')} {...form.getInputProps('email')} />
                 <PasswordInput label={t('login.fields.password')} {...form.getInputProps('password')} />
@@ -56,6 +56,11 @@ export default function Route() {
                 <AlertError description={fetcher.error} />
 
                 <Button type={'submit'} loading={fetcher.loading}>{t('login.buttons.login')}</Button>
+
+                <Text size={'sm'} ta={'center'}>
+                    {t('login.links.dontHaveAccount')}{' '}
+                    <Anchor href={'/login'}>{t('login.links.register')}</Anchor>
+                </Text>
             </Stack>
         </form>
     );
