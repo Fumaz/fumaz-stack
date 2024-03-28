@@ -15,6 +15,10 @@ import { json, LoaderFunctionArgs } from '@remix-run/node';
 import i18next from '~/i18next.server';
 import { useTranslation } from 'react-i18next';
 import { useChangeLanguage } from 'remix-i18next/react';
+import { QueryClient } from '@tanstack/query-core';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ModalsProvider } from '@mantine/modals';
+import { Notifications } from '@mantine/notifications';
 
 export const TITLE = 'Fumaz Stack';
 export const THEME: MantineThemeOverride = {
@@ -28,12 +32,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const handle = {
-    // In the handle export, we can add a i18n key with namespaces our route
-    // will need to load. This key can be a single string or an array of strings.
-    // TIP: In most cases, you should set this to your defaultNS from your i18n config
-    // or if you did not set one, set it to the i18next default namespace "translation"
     i18n: 'common',
 };
+
+const queryClient = new QueryClient();
 
 export default function App() {
     const { locale } = useLoaderData<typeof loader>();
@@ -58,11 +60,16 @@ export default function App() {
             height: '100%',
             width: '100%',
         }}>
-        <MantineProvider theme={THEME} forceColorScheme={'light'}>
-            <Outlet />
-            <ScrollRestoration />
-            <Scripts />
-        </MantineProvider>
+        <QueryClientProvider client={queryClient}>
+            <MantineProvider theme={THEME} forceColorScheme={'light'}>
+                <ModalsProvider>
+                    <Notifications />
+                    <Outlet />
+                </ModalsProvider>
+            </MantineProvider>
+        </QueryClientProvider>
+        <ScrollRestoration />
+        <Scripts />
         </body>
         </html>
     );
