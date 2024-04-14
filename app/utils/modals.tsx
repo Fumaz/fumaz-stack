@@ -87,23 +87,34 @@ export function useChildModal({ onOpened }: {
     },
 }) {
     const [opened, setOpened] = React.useState(false);
+    const openedRef = React.useRef(opened);
 
     const memoedComponent = React.useCallback((props: {
         button: ReactNode,
     } & Omit<ModalProps, 'opened' | 'onClose'>) => {
-        const handleClose = () => setOpened(false);
-        const handleBtnClick = () => setOpened(true);
+        const handleClose = () => {
+            setOpened(false);
+            openedRef.current = false;
+        };
+        const handleBtnClick = () => {
+            setOpened(true);
+            openedRef.current = true;
+        };
 
         const ChildModal = (
             <>
-                <Modal {...props} opened={opened} onClose={handleClose}/>
+                <Modal
+                    {...props}
+                    opened={openedRef.current}
+                    onClose={handleClose}
+                />
 
                 {addClickToComponent(props.button, handleBtnClick)}
             </>
         );
 
         return ChildModal;
-    }, [opened]);
+    }, []);
 
     useEffect(() => {
         onOpened?.(opened);
