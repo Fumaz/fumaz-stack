@@ -121,8 +121,11 @@ export function useChildModal({ onOpened }: {
     }, [opened]);
 
     return {
-        opened,
-        setOpened,
+        opened: opened,
+        setOpened: (opened: boolean) => {
+            setOpened(opened);
+            openedRef.current = opened;
+        },
         ChildModal: memoedComponent,
     };
 }
