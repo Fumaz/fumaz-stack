@@ -1,7 +1,8 @@
-import React, { ReactElement, ReactNode, useEffect } from 'react';
+import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useState } from 'react';
 import { nanoid } from 'nanoid/non-secure';
 import { modals } from '@mantine/modals';
 import { Button, Modal, ModalProps, Stack } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 
 export const addPropsToComponent = (component: ReactNode, props: Record<string, any>): ReactElement => {
     if (React.isValidElement(component)) {
@@ -162,4 +163,65 @@ export function ChildModal({
 export function ImplicitModal(props: Omit<ModalProps, 'opened' | 'onClose'>) {
     return <Modal {...props} opened={false} onClose={() => {
     }} />;
+}
+
+export type ModalChildrenProps = {
+    openedModal?: boolean,
+    modalId?: string,
+    closeModal?: () => void,
+    openModal?: () => void,
+};
+
+export function ModalButton({
+                                contents,
+                                children,
+                                modalProps,
+                            }: {
+    contents: ReactNode,
+    children: ReactNode,
+    modalProps?: Omit<ModalProps, 'opened' | 'onClose' | 'children'>,
+}) {
+    const [modalId] = useState(nanoid(16));
+    const { t } = useTranslation();
+
+    const handleClose = () => {
+        modals.close(modalId);
+    };
+
+    const handleOpen = () => {
+        modals.open({
+            modalId: modalId,
+            onClose: handleClose,
+            children: addPropsToComponent(contents, {
+                openedModal: true,
+                modalId: modalId,
+                closeModal: handleClose,
+                openModal: handleOpen,
+            }),
+            ...modalProps,
+            title: t(typeof modalProps?.title === 'string' ? modalProps.title : 'common.title'),
+        });
+    };
+
+    return <>
+        {addClickToComponent(children, handleOpen)}
+    </>;
+}
+
+export function createModalTemplate<T>({
+                                           contents,
+                                           modalProps,
+                                       }: {
+    contents: FunctionComponent<T>,
+    modalProps?: Omit<ModalProps, 'opened' | 'onClose' | 'children'>,
+}) {
+    const Contents = contents;
+
+    return (props: {
+        children: ReactNode
+    } & T) => {
+        return <ModalButton contents={<Contents {...props} />} modalProps={modalProps}>
+            {props.children}
+        </ModalButton>;
+    };
 }
